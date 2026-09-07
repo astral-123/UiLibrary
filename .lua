@@ -1,3 +1,4 @@
+--a
 local Player = game:GetService("Players").LocalPlayer
 local Mouse = Player:GetMouse()
 
@@ -174,10 +175,10 @@ local Themes = {
 	Red = {
 		MainFrame = Color3.fromRGB(8, 8, 8), Minimise = Color3.fromRGB(220, 35, 45), MinimiseAccent = Color3.fromRGB(120, 12, 20),
 		Maximise = Color3.fromRGB(245, 70, 75), MaximiseAccent = Color3.fromRGB(145, 18, 25),
-		NavBar = Color3.fromRGB(28, 28, 30), NavBarAccent = Color3.fromRGB(255, 255, 255), NavBarInvert = Color3.fromRGB(235, 235, 235),
-		TitleBar = Color3.fromRGB(180, 18, 30), TitleBarAccent = Color3.fromRGB(255, 255, 255), Overlay = Color3.fromRGB(180, 18, 30),
-		Banner = Color3.fromRGB(18, 18, 20), BannerAccent = Color3.fromRGB(245, 55, 65), Content = Color3.fromRGB(12, 12, 14),
-		Button = Color3.fromRGB(38, 38, 42), ButtonAccent = Color3.fromRGB(255, 255, 255), ChipSet = Color3.fromRGB(220, 35, 45), ChipSetAccent = Color3.fromRGB(255, 255, 255),
+		NavBar = Color3.fromRGB(18, 18, 20), NavBarAccent = Color3.fromRGB(255, 255, 255), NavBarInvert = Color3.fromRGB(235, 235, 235),
+		TitleBar = Color3.fromRGB(220, 0, 35), TitleBarAccent = Color3.fromRGB(255, 255, 255), Overlay = Color3.fromRGB(220, 0, 35),
+		Banner = Color3.fromRGB(18, 18, 20), BannerAccent = Color3.fromRGB(245, 55, 65), Content = Color3.fromRGB(0, 0, 0),
+		Button = Color3.fromRGB(30, 30, 34), ButtonAccent = Color3.fromRGB(255, 255, 255), ChipSet = Color3.fromRGB(220, 35, 45), ChipSetAccent = Color3.fromRGB(255, 255, 255),
 		DataTable = Color3.fromRGB(220, 35, 45), DataTableAccent = Color3.fromRGB(255, 255, 255), Slider = Color3.fromRGB(42, 42, 46), SliderAccent = Color3.fromRGB(235, 45, 55),
 		Toggle = Color3.fromRGB(210, 35, 45), ToggleAccent = Color3.fromRGB(255, 255, 255), Dropdown = Color3.fromRGB(25, 25, 28), DropdownAccent = Color3.fromRGB(240, 45, 55),
 		ColorPicker = Color3.fromRGB(25, 25, 28), ColorPickerAccent = Color3.fromRGB(240, 45, 55), TextField = Color3.fromRGB(35, 35, 40), TextFieldAccent = Color3.fromRGB(255, 255, 255),
@@ -359,7 +360,8 @@ local NavBar = {
 		NewNavBar.Name = "NavBar"
 		NewNavBar.Size = UDim2.fromScale(1,0) + UDim2.fromOffset(-10,30)
 		NewNavBar.Position = UDim2.fromOffset(5,35)
-		NewNavBar.ImageColor3 = ThisTheme.NavBar
+		NewNavBar.ImageColor3 = Color3.fromRGB(18, 18, 20)
+		NewNavBar.ImageTransparency = 0
 		NewNavBar.ZIndex = 100
 
 		local NavBarShadow = Objects.new("Shadow")
@@ -404,7 +406,18 @@ local NavBar = {
 
 		local NavBarPadding = Objects.new("UIPadding")
 		NavBarPadding.PaddingLeft = UDim.new(0,5)
+		NavBarPadding.PaddingTop = UDim.new(0,2)
+		NavBarPadding.PaddingBottom = UDim.new(0,2)
 		NavBarPadding.Parent = NavBarContent
+
+		local NavBarAccentLine = Instance.new("Frame")
+		NavBarAccentLine.Name = "RedAccentLine"
+		NavBarAccentLine.BackgroundColor3 = Color3.fromRGB(220, 0, 35)
+		NavBarAccentLine.BorderSizePixel = 0
+		NavBarAccentLine.Size = UDim2.new(1, 0, 0, 3)
+		NavBarAccentLine.Position = UDim2.new(0, 0, 1, -3)
+		NavBarAccentLine.ZIndex = 110
+		NavBarAccentLine.Parent = NewNavBar
 
 		return NewNavBar, NavBarContent
 	end,
@@ -1126,10 +1139,13 @@ function Material.Load(Config)
 			Button.TextTransparency = 1
 		end
 
-		Button.BackgroundColor3 = Color3.fromRGB(28, 28, 31)
+		Button.BackgroundColor3 = Color3.fromRGB(30, 30, 34)
 		Button.BackgroundTransparency = 0
 		Button.BorderSizePixel = 0
 		Button.AutoButtonColor = false
+		Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Button.TextTransparency = 0
+		Button.Visible = true
 		Button.Parent = NavigationBarContent
 
 		local TabCorner = Instance.new("UICorner")
