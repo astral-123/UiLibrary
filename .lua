@@ -1,3 +1,4 @@
+-q
 local Player = game:GetService("Players").LocalPlayer
 local Mouse = Player:GetMouse()
 
@@ -803,7 +804,7 @@ function Material.Load(Config)
 	local TitleText = Objects.new("Button")
 	TitleText.Name = "Title"
 	TitleText.Text = Title
-	TitleText.Position = UDim2.fromOffset(12, 0)
+	TitleText.Position = UDim2.fromOffset(38, 0)
 	TitleText.TextColor3 = Theme.TitleBarAccent
 	TitleText.TextTransparency = 1
 	TitleText.Font = Enum.Font.GothamBold
@@ -815,12 +816,12 @@ function Material.Load(Config)
 	ToggleLogo.BackgroundColor3 = Theme.TitleBar
 	ToggleLogo.BackgroundTransparency = 0.05
 	ToggleLogo.BorderSizePixel = 0
-	ToggleLogo.Size = UDim2.fromOffset(42, 42)
-	ToggleLogo.Position = UDim2.fromOffset(12, 12)
+	ToggleLogo.Size = UDim2.fromOffset(32, 32)
+	ToggleLogo.Position = UDim2.fromOffset(10, 10)
 	ToggleLogo.ZIndex = 500
 	ToggleLogo.AutoButtonColor = false
-	ToggleLogo.Image = Logo and tostring(Logo) or "rbxassetid://5554831670"
-	ToggleLogo.ImageColor3 = Logo and Color3.fromRGB(255, 255, 255) or Theme.TitleBarAccent
+	ToggleLogo.Image = Logo and tostring(Logo) or "rbxassetid://5576439039"
+	ToggleLogo.ImageColor3 = Color3.fromRGB(255, 255, 255)
 	ToggleLogo.Parent = NewInstance
 
 	local LogoCorner = Instance.new("UICorner")
@@ -862,11 +863,13 @@ function Material.Load(Config)
 	local MinimiseButton = Objects.new("SmoothButton")
 	MinimiseButton.Size = UDim2.fromOffset(20,20)
 	MinimiseButton.Position = UDim2.fromScale(1,0) + UDim2.fromOffset(-25,5)
+	MinimiseButton.Visible = false
 	MinimiseButton.ImageColor3 = Theme.Minimise
 	MinimiseButton.ImageTransparency = 1
 	MinimiseButton.Parent = TitleBar
 
 	local MinimiseShadow = Objects.new("Shadow")
+	MinimiseShadow.Visible = false
 	MinimiseShadow.ImageColor3 = Theme.MinimiseAccent
 	MinimiseShadow.ImageTransparency = 1
 	MinimiseShadow.Parent = MinimiseButton
@@ -1137,7 +1140,15 @@ function Material.Load(Config)
 			Button.TextTransparency = 1
 		end
 
+		Button.BackgroundColor3 = Color3.fromRGB(28, 28, 31)
+		Button.BackgroundTransparency = 0
+		Button.BorderSizePixel = 0
+		Button.AutoButtonColor = false
 		Button.Parent = NavigationBarContent
+
+		local TabCorner = Instance.new("UICorner")
+		TabCorner.CornerRadius = UDim.new(0, 4)
+		TabCorner.Parent = Button
 
 		local PageContentFrame = Objects.new("Scroll")
 		PageContentFrame.Name = Title:upper() or ImageID
