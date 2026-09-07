@@ -171,6 +171,18 @@ local Themes = {
 	}
 }
 
+	Red = {
+		MainFrame = Color3.fromRGB(8, 8, 8), Minimise = Color3.fromRGB(220, 35, 45), MinimiseAccent = Color3.fromRGB(120, 12, 20),
+		Maximise = Color3.fromRGB(245, 70, 75), MaximiseAccent = Color3.fromRGB(145, 18, 25),
+		NavBar = Color3.fromRGB(28, 28, 30), NavBarAccent = Color3.fromRGB(255, 255, 255), NavBarInvert = Color3.fromRGB(235, 235, 235),
+		TitleBar = Color3.fromRGB(180, 18, 30), TitleBarAccent = Color3.fromRGB(255, 255, 255), Overlay = Color3.fromRGB(180, 18, 30),
+		Banner = Color3.fromRGB(18, 18, 20), BannerAccent = Color3.fromRGB(245, 55, 65), Content = Color3.fromRGB(12, 12, 14),
+		Button = Color3.fromRGB(38, 38, 42), ButtonAccent = Color3.fromRGB(255, 255, 255), ChipSet = Color3.fromRGB(220, 35, 45), ChipSetAccent = Color3.fromRGB(255, 255, 255),
+		DataTable = Color3.fromRGB(220, 35, 45), DataTableAccent = Color3.fromRGB(255, 255, 255), Slider = Color3.fromRGB(42, 42, 46), SliderAccent = Color3.fromRGB(235, 45, 55),
+		Toggle = Color3.fromRGB(210, 35, 45), ToggleAccent = Color3.fromRGB(255, 255, 255), Dropdown = Color3.fromRGB(25, 25, 28), DropdownAccent = Color3.fromRGB(240, 45, 55),
+		ColorPicker = Color3.fromRGB(25, 25, 28), ColorPickerAccent = Color3.fromRGB(240, 45, 55), TextField = Color3.fromRGB(35, 35, 40), TextFieldAccent = Color3.fromRGB(255, 255, 255),
+	}
+
 local Types = {
 	"RoundFrame",
 	"Shadow",
@@ -705,8 +717,11 @@ function Material.Load(Config)
 	local Title = Config.Title or "MaterialLua"
 	local SizeX = Config.SizeX or 300
 	local SizeY = Config.SizeY or 500
-	local Theme = Config.Theme or "Light"
+	local Theme = Config.Theme or "Red"
 	local Overrides = Config.ColorOverrides or {}
+	local Logo = Config.Logo or Config.LogoImage
+	local ToggleKey = Config.ToggleKey or Enum.KeyCode.RightControl
+	local BackgroundImage = Config.BackgroundImage
 	local Open = true
 
 	Theme = Themes[Theme]
@@ -755,6 +770,7 @@ function Material.Load(Config)
 	MainFrame.Size = UDim2.fromOffset(0,SizeY)
 	MainFrame.Position = UDim2.fromScale(0.5,0.5) - UDim2.fromOffset(SizeX/2,SizeY/2)
 	MainFrame.ImageColor3 = Theme.MainFrame
+	MainFrame.ClipsDescendants = false
 	MainFrame.Parent = NewInstance
 
 	TweenService:Create(MainFrame, TweenInfo.new(1), {Size = UDim2.fromOffset(SizeX,SizeY)}):Play()
@@ -787,10 +803,44 @@ function Material.Load(Config)
 	local TitleText = Objects.new("Button")
 	TitleText.Name = "Title"
 	TitleText.Text = Title
+	TitleText.Position = UDim2.fromOffset(12, 0)
 	TitleText.TextColor3 = Theme.TitleBarAccent
 	TitleText.TextTransparency = 1
 	TitleText.Font = Enum.Font.GothamBold
 	TitleText.Parent = TitleBar
+
+	-- Logo flottant : clic ou touche ToggleKey pour afficher/masquer la fenêtre.
+	local ToggleLogo = Instance.new("ImageButton")
+	ToggleLogo.Name = "LibraryLogoToggle"
+	ToggleLogo.BackgroundColor3 = Theme.TitleBar
+	ToggleLogo.BackgroundTransparency = 0.05
+	ToggleLogo.BorderSizePixel = 0
+	ToggleLogo.Size = UDim2.fromOffset(42, 42)
+	ToggleLogo.Position = UDim2.fromOffset(12, 12)
+	ToggleLogo.ZIndex = 500
+	ToggleLogo.AutoButtonColor = false
+	ToggleLogo.Image = Logo and tostring(Logo) or "rbxassetid://5554831670"
+	ToggleLogo.ImageColor3 = Logo and Color3.fromRGB(255, 255, 255) or Theme.TitleBarAccent
+	ToggleLogo.Parent = NewInstance
+
+	local LogoCorner = Instance.new("UICorner")
+	LogoCorner.CornerRadius = UDim.new(0, 8)
+	LogoCorner.Parent = ToggleLogo
+
+	local function SetLibraryVisible(Value)
+		Open = Value
+		MainFrame.Visible = Open
+	end
+
+	ToggleLogo.MouseButton1Click:Connect(function()
+		SetLibraryVisible(not MainFrame.Visible)
+	end)
+
+	InputService.InputBegan:Connect(function(Input, GameProcessed)
+		if not GameProcessed and Input.KeyCode == ToggleKey then
+			SetLibraryVisible(not MainFrame.Visible)
+		end
+	end)
 
 	TitleText.MouseButton1Down:Connect(function()
 		local Mx, My = Mouse.X, Mouse.Y
@@ -843,6 +893,20 @@ function Material.Load(Config)
 	Content.Position = UDim2.fromOffset(5,70)
 	Content.ImageTransparency = 1
 	Content.Parent = MainFrame
+
+	if BackgroundImage then
+		local Background = Instance.new("ImageLabel")
+		Background.Name = "BackgroundImage"
+		Background.BackgroundTransparency = 1
+		Background.Image = tostring(BackgroundImage)
+		Background.ImageTransparency = Config.BackgroundTransparency or 0.15
+		Background.ScaleType = Enum.ScaleType.Crop
+		Background.Size = UDim2.fromScale(1, 1) - UDim2.fromOffset(10, 75)
+		Background.Position = UDim2.fromOffset(5, 70)
+		Background.ZIndex = 1
+		Background.Parent = MainFrame
+		Content.ZIndex = 2
+	end
 
 	local NavigationBar, NavigationBarContent, NavBarMenu, NavBarOverlay = NavBar[Styles[Style]]()
 	NavigationBar.Parent = MainFrame
