@@ -1,4 +1,3 @@
---q
 local Player = game:GetService("Players").LocalPlayer
 local Mouse = Player:GetMouse()
 
@@ -804,44 +803,11 @@ function Material.Load(Config)
 	local TitleText = Objects.new("Button")
 	TitleText.Name = "Title"
 	TitleText.Text = Title
-	TitleText.Position = UDim2.fromOffset(38, 0)
+	TitleText.Position = UDim2.fromOffset(32, 0)
 	TitleText.TextColor3 = Theme.TitleBarAccent
 	TitleText.TextTransparency = 1
 	TitleText.Font = Enum.Font.GothamBold
 	TitleText.Parent = TitleBar
-
-	-- Logo flottant : clic ou touche ToggleKey pour afficher/masquer la fenêtre.
-	local ToggleLogo = Instance.new("ImageButton")
-	ToggleLogo.Name = "LibraryLogoToggle"
-	ToggleLogo.BackgroundColor3 = Theme.TitleBar
-	ToggleLogo.BackgroundTransparency = 0.05
-	ToggleLogo.BorderSizePixel = 0
-	ToggleLogo.Size = UDim2.fromOffset(32, 32)
-	ToggleLogo.Position = UDim2.fromOffset(10, 10)
-	ToggleLogo.ZIndex = 500
-	ToggleLogo.AutoButtonColor = false
-	ToggleLogo.Image = Logo and tostring(Logo) or "rbxassetid://5576439039"
-	ToggleLogo.ImageColor3 = Color3.fromRGB(255, 255, 255)
-	ToggleLogo.Parent = NewInstance
-
-	local LogoCorner = Instance.new("UICorner")
-	LogoCorner.CornerRadius = UDim.new(0, 8)
-	LogoCorner.Parent = ToggleLogo
-
-	local function SetLibraryVisible(Value)
-		Open = Value
-		MainFrame.Visible = Open
-	end
-
-	ToggleLogo.MouseButton1Click:Connect(function()
-		SetLibraryVisible(not MainFrame.Visible)
-	end)
-
-	InputService.InputBegan:Connect(function(Input, GameProcessed)
-		if not GameProcessed and Input.KeyCode == ToggleKey then
-			SetLibraryVisible(not MainFrame.Visible)
-		end
-	end)
 
 	TitleText.MouseButton1Down:Connect(function()
 		local Mx, My = Mouse.X, Mouse.Y
@@ -913,6 +879,26 @@ function Material.Load(Config)
 
 	local NavigationBar, NavigationBarContent, NavBarMenu, NavBarOverlay = NavBar[Styles[Style]]()
 	NavigationBar.Parent = MainFrame
+
+	-- Bouton intégré dans le titre : masque/affiche uniquement la zone tabs + contenu.
+	local MenuToggleButton = Instance.new("ImageButton")
+	MenuToggleButton.Name = "MenuToggleButton"
+	MenuToggleButton.BackgroundTransparency = 1
+	MenuToggleButton.AutoButtonColor = false
+	MenuToggleButton.Image = "rbxassetid://5576439039"
+	MenuToggleButton.ImageColor3 = Theme.TitleBarAccent
+	MenuToggleButton.Size = UDim2.fromOffset(20, 20)
+	MenuToggleButton.Position = UDim2.fromOffset(8, 5)
+	MenuToggleButton.ZIndex = 250
+	MenuToggleButton.Parent = TitleBar
+
+	local TabsOpen = true
+	MenuToggleButton.MouseButton1Click:Connect(function()
+		TabsOpen = not TabsOpen
+		NavigationBar.Visible = TabsOpen
+		Content.Visible = TabsOpen
+		MenuToggleButton.Rotation = TabsOpen and 0 or 180
+	end)
 
 	TweenService:Create(TitleBar, TweenInfo.new(1), {ImageTransparency = 0}):Play()
 	TweenService:Create(ExtraBar, TweenInfo.new(1), {BackgroundTransparency = 0}):Play()
